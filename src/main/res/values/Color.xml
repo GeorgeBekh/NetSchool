@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color
+        name="LLGREY"
+        >#e6e6e6</color>
+    <color
+        name="LGREEN"
+        >#95d685</color>
+    <color
+        name="LYELLOW"
+        >#d6cf85</color>
+</resources>
