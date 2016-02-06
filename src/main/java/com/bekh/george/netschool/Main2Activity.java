@@ -183,10 +183,6 @@ public class Main2Activity extends ActionBarActivity
         marks.setWebViewClient(new WebViewClient(){
             public void onPageFinished(WebView view, String url) {
                 if (url.equals(StartActivity.URL)) {
-                    switch (url){
-                        case "asd":
-                            break;
-                    }
 
                     switch (i) {
                         case 1:
