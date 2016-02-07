@@ -14,26 +14,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <GridLayout
+        <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/marksLinear">
 
-            <TextView
+            <ListView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Small Text"
-                android:id="@+id/textView2" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Small Text"
-                android:id="@+id/textView3" />
-        </GridLayout>
+                android:id="@+id/marksList" />
+        </LinearLayout>
 
         <LinearLayout
             android:orientation="vertical"
@@ -63,11 +54,10 @@
             android:layout_height="match_parent"
             android:id="@+id/webLinear">
 
-            <WebView
+            <ExpandableListView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/webView" />
-
+                android:id="@+id/expandableListView" />
         </LinearLayout>
 
     </FrameLayout>

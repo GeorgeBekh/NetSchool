@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
+import android.webkit.JavascriptInterface;
 import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
@@ -61,6 +62,7 @@ public class Main2Activity extends ActionBarActivity
     View mainLayout;
     ArrayList<String> list= new ArrayList<String>();
     MyArrayAdapter adapter;
+    ListView marksList;
     ListView listView ;
 
 
@@ -69,6 +71,7 @@ public class Main2Activity extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initializing(savedInstanceState);
+
         netSchoolBrowser.setWebChromeClient(new WebChromeClient() {
             public boolean onJsPrompt(WebView view, String url, String message, String defaultValue, JsPromptResult result) {
                 if (message.contains("week")) {
@@ -97,7 +100,9 @@ public class Main2Activity extends ActionBarActivity
         });
         netSchoolBrowser.setWebViewClient(new WebViewClient() {
             public void onPageFinished(WebView view, String url) {
+
                 if (url.equals(StartActivity.URL)) {
+
 
                     switch (i) {
                         case 1:
@@ -122,6 +127,8 @@ public class Main2Activity extends ActionBarActivity
                 } else {
                     if (url.equals("http://ns.gymn24.ru/asp/Announce/ViewAnnouncements.asp")) {
                         saveFormData();
+
+
                         view.loadUrl("javascript:SetSelectedMenu('14','/asp/Curriculum/Assignments.asp');");
                     } else {
                         if (url.equals("http://ns.gymn24.ru/asp/SecurityWarning.asp")) {
@@ -236,8 +243,9 @@ public class Main2Activity extends ActionBarActivity
         marks.setWebChromeClient(new WebChromeClient() {
             @Override
             public boolean onJsPrompt(WebView view, String url, String message, String defaultValue, JsPromptResult result) {
-                TextView textView = (TextView) findViewById(R.id.textView2);
-                textView.setText(message);
+               marksList=(ListView) findViewById(R.id.marksList);
+                saveString(StartActivity.MARKS, message);
+                setMarksContent(message);
 
                 return true;
             }
@@ -245,6 +253,21 @@ public class Main2Activity extends ActionBarActivity
         netSchoolBrowser.loadUrl(StartActivity.URL);
         marks.loadUrl(StartActivity.URL);
     }
+/*    class MyJavaScriptInterface {
+
+        private Context ctx;
+
+        MyJavaScriptInterface(Context ctx) {
+            this.ctx = ctx;
+        }
+
+        @JavascriptInterface
+        @SuppressWarnings("unused")
+        public void showHTML(String html) {
+            Log.v(TAG, html);
+        }
+
+    }*/
 
     private void initializing(Bundle savedInstanceState){
         LayoutInflater inflater = getLayoutInflater();
@@ -276,7 +299,9 @@ public class Main2Activity extends ActionBarActivity
         netSchoolBrowser.getSettings().setJavaScriptEnabled(true);
         netSchoolBrowser.getSettings().setSavePassword(false);
         netSchoolBrowser.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
-        marks=(WebView) findViewById(R.id.webView);
+       // netSchoolBrowser.addJavascriptInterface(new MyJavaScriptInterface(this),"MyJs");
+
+        marks=new WebView(this);
         marks.getSettings().setJavaScriptEnabled(true);
         marks.getSettings().setSavePassword(false);
         marks.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
@@ -287,6 +312,8 @@ public class Main2Activity extends ActionBarActivity
         name = (TextView) diaryLayout.findViewById(R.id.name);
 //        content.setText(diary);
         listView=(ListView) diaryLayout.findViewById(R.id.listView);
+        marksList = (ListView) marksLayout.findViewById(R.id.marksList);
+        setMarksContent(getString(StartActivity.MARKS));
         name.setText("Пользователь:" + UN);
         currentWeek=getString(StartActivity.WEEK);
         Log.v(TAG, "Текущая неделя:" + currentWeek);
@@ -328,6 +355,21 @@ public class Main2Activity extends ActionBarActivity
         SharedPreferences sPref = getSharedPreferences(UN, MODE_PRIVATE);
         return sPref.getString(name,"");
     }
+    private void setMarksContent(String message){
+        ArrayList<String> list = new ArrayList<String>();
+        boolean f =true;
+        String s;
+        while(f){
+            if(message.contains("$%^")){
+                s=message.substring(0,message.indexOf("$%^"));
+                list.add(s);
+                message = message.substring(message.indexOf("$%^")+3,message.length()-1);
+            }else{
+                f=false;
+            }
+        }
+        marksList.setAdapter(new MarksArrayAdapter(this,list));
+    }
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
@@ -341,8 +383,8 @@ public class Main2Activity extends ActionBarActivity
     public void onSectionAttached(int number) {
         switch (number) {
 
-            case 1:
-                mTitle = getString(R.string.title_section1);
+            case 3:
+                mTitle = getString(R.string.title_section3);
                 if(diaryLayout!=null&&marksLayout!=null&&webviewLayout!=null) {
                     diaryLayout.setVisibility(View.VISIBLE);
                     marksLayout.setVisibility(View.GONE);
@@ -357,8 +399,8 @@ public class Main2Activity extends ActionBarActivity
                     webviewLayout.setVisibility(View.GONE);
                 }
                 break;
-            case 3:
-                mTitle = getString(R.string.title_section3);
+            case 1:
+                mTitle = getString(R.string.title_section1);
                 if(diaryLayout!=null&&marksLayout!=null&&webviewLayout!=null) {
                     diaryLayout.setVisibility(View.GONE);
                     marksLayout.setVisibility(View.GONE);
@@ -369,36 +411,47 @@ public class Main2Activity extends ActionBarActivity
     }
     public void setDiaryContent(String message){
         list = new ArrayList<String>();
+        ArrayList<ArrayList<String>> parent = new ArrayList<ArrayList<String>>();
+        ArrayList<String> child = new ArrayList<String>();
         boolean f=true;
+        boolean d= false;
         message = message.replace("#$diary$#","");
         while (f){
             if(message.contains("%&$")){
                 if(message.indexOf("!@#")<message.indexOf("%&$")&&message.contains("!@#")){
                     day=message.substring(0,message.indexOf("!@#")+3);
+                    if(d){
+                        parent.add(child);
+                        child=new ArrayList<String>();
+                    }
+                    child.add(day);
                     list.add(day);
                     message=message.replace(day, "");
                     //Log.v(TAG,"День:"+day);
                 }else{
                     if((message.indexOf("!@#")>message.indexOf("%&$"))||(!message.contains("!@#"))){
                         task=message.substring(0, message.indexOf("%&$"));
+                        d=true;
                         list.add(task);
+                        child.add(task);
                         //Log.v(TAG,message.replace(task + "%&$", ""));
                         message=message.replace(task + "%&$", "");
                         //Log.v(TAG,"Задание:"+task);
                     }
                 }
             }else{
+                parent.add(child);
                 f=false;
             }
         }
+        ExpandableListView listView1 =(ExpandableListView) findViewById(R.id.expandableListView);
+        listView1.setAdapter(new ExpListAdapter(this,parent));
         if(listView!=null) {
             listView.setAdapter(new MyArrayAdapter(this, list));
         }
 
     }
-    public void setMarksContent(String message){
 
-    }
 
 
     public void restoreActionBar() {

@@ -34,9 +34,7 @@ public class MyArrayAdapter extends ArrayAdapter<String> {
         View rowView = inflater.inflate(R.layout.child_item, parent, false);
         TextView textView = (TextView) rowView.findViewById(R.id.label);
         Button button=(Button) rowView.findViewById(R.id.mark);
-        ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
         textView.setText(values.get(position));
-        // Изменение иконки для Windows и iPhone
         String s = values.get(position);
         String b ="Оценка:";
         Resources res = Resources.getSystem();

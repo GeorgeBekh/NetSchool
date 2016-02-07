@@ -10,6 +10,7 @@ public class StartActivity extends ActionBarActivity {
     final public static String ALL ="all";
     final public static String WEEK ="week";
     final public static String DIARY ="diarycontent";
+    final public static String MARKS ="markscontent";
     final public static String FORM_DATA ="formdata";
     final public static String LOGIN ="currentlogin";
     final public static String PASSWORD ="currentpassword";
