@@ -2,6 +2,7 @@ package com.bekh.george.netschool;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -13,6 +14,8 @@ public class StartActivity extends ActionBarActivity {
     final public static String MARKS ="markscontent";
     final public static String FORM_DATA ="formdata";
     final public static String LOGIN ="currentlogin";
+    public static Typeface tf;
+
     final public static String PASSWORD ="currentpassword";
     final public static String URL ="http://ns.gymn24.ru/login1.asp";
     private static String currentLogin;
@@ -21,14 +24,17 @@ public class StartActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        tf = Typeface.createFromAsset(this.getAssets(),"fonts/Dewberry regular.ttf");
         Intent intent = new Intent();
         if(check()){
             intent.setClass(StartActivity.this,Main2Activity.class);
-            intent.putExtra(LOGIN,currentLogin);
+            intent.putExtra(LOGIN, currentLogin);
         }else{
             intent.setClass(StartActivity.this, Login.class);
         }
+
         startActivity(intent);
+
     }
     public boolean check(){
         SharedPreferences sPref = getSharedPreferences(FORM_DATA,MODE_PRIVATE);
@@ -41,5 +47,6 @@ public class StartActivity extends ActionBarActivity {
             return true;
         }
     }
+
 
 }

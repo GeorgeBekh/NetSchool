@@ -40,6 +40,7 @@ public class MarksArrayAdapter extends ArrayAdapter<String> {
         mark=mark.replace(",", ".");
         markdoub=Double.parseDouble(mark);
         textView.setText(subj);
+        textView.setTypeface(StartActivity.tf);
         button.setText(new DecimalFormat("#0.0").format(markdoub));
         int i = markdoub.intValue();
         switch (i){
@@ -62,6 +63,7 @@ public class MarksArrayAdapter extends ArrayAdapter<String> {
                 button.setVisibility(View.GONE);
                 break;
         }
+        //button.setTypeface(StartActivity.tf);
         return rowView;
 
 

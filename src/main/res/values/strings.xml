@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">NetSchool</string>
     <string name="action_settings">Settings</string>
+    <string name="refresh">Refresh</string>
     <string name="title_activity_login">Sign in</string>
 
 

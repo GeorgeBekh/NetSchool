@@ -2,11 +2,14 @@
 <resources>
     <color
         name="LLGREY"
-        >#e6e6e6</color>
+        >#f5f5f5</color>
     <color
         name="LGREEN"
         >#95d685</color>
     <color
         name="LYELLOW"
         >#fff693</color>
+    <color
+        name="LRED"
+        >#ff9393</color>
 </resources>
